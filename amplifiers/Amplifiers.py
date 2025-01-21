@@ -81,12 +81,14 @@ class Amplifier:
         return self.amplifier_uses
 
 
+# Get the highest score for all amplifier teams, and multiply that score with the multiplier.
 def get_highest_score(match: MatchData, multiplier):
     highest_score = max(score.get_score() for score in match.amplifier_users.get_player_scores())
     for score in match.amplifier_users.get_player_scores():
         if score.get_score() == highest_score:
             score.set_score(round(score.get_score() * multiplier))
 
+# The Carry I
 class TheCarryI(Amplifier):
     def __init__(self):
         super().__init__(1, 1)
@@ -96,6 +98,7 @@ class TheCarryI(Amplifier):
         return match.team1.get_score(), match.team2.get_score()
 
 
+# The Carry II
 class TheCarryII(Amplifier):
     def __init__(self):
         super().__init__(2, 1)
@@ -105,6 +108,7 @@ class TheCarryII(Amplifier):
         return match.team1.get_score(), match.team2.get_score()
 
 
+# The Carry III
 class TheCarryIII(Amplifier):
     def __init__(self):
         super().__init__(3, 1)
@@ -113,16 +117,41 @@ class TheCarryIII(Amplifier):
         get_highest_score(match, 1.5)
         return match.team1.get_score(), match.team2.get_score()
 
-class DudeThatFingerlock(Amplifier):
+
+# Set opposing score multiplier
+def set_opposing_score_multiplier(match: MatchData, multiplier):
+    set_team = match.team2 if match.amplifier_users == match.team1 else match.team1
+    [score.set_score(round(score.get_score() * multiplier)) for score in set_team]
+
+# Poison I
+class PoisonI(Amplifier):
     def __init__(self):
-        super().__init__(1, 2)
+        super().__init__(4, 1)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round(score.get_score() * min(1.15, 1 + (score.get_misses() / 200)))) for score in
-         match.amplifier_users.get_player_scores()]
+        set_opposing_score_multiplier(match, 2)
+        return match.team1.get_score(), match.team2.get_score()
+
+# Poison II
+class PoisonII(Amplifier):
+    def __init__(self):
+        super().__init__(5, 1)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        set_opposing_score_multiplier(match, 1.75)
+        return match.team1.get_score(), match.team2.get_score()
+
+# Poison III
+class PoisonIII(Amplifier):
+    def __init__(self):
+        super().__init__(6, 1)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        set_opposing_score_multiplier(match, 1.75)
         return match.team1.get_score(), match.team2.get_score()
 
 
+# Limit Break
 class LimitBreak(Amplifier):
     def __init__(self):
         super().__init__(2, 2)
@@ -130,6 +159,16 @@ class LimitBreak(Amplifier):
     def get_modified_score(self, match: MatchData) -> (int, int):
         [score.set_score(score.get_combo()) for score in match.team1.get_player_scores()]
         [score.set_score(score.get_combo()) for score in match.team2.get_player_scores()]
+        return match.team1.get_score(), match.team2.get_score()
+
+
+class DudeThatFingerlock(Amplifier):
+    def __init__(self):
+        super().__init__(1, 2)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        [score.set_score(round(score.get_score() * min(1.15, 1 + (score.get_misses() / 200)))) for score in
+         match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
 
