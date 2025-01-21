@@ -11,12 +11,13 @@ class MatchData:
 
 
 class PlayerScore:
-    def __init__(self, player_id: int, score: int, combo: int, acc: float, misses: int):
+    def __init__(self, player_id: int, score: int, combo: int, acc: float, misses: int, mods: str):
         self.player_id = player_id
         self.score = score
         self.combo = combo
         self.acc = acc
         self.misses = misses
+        self.mods = mods
 
     def get_id(self) -> int:
         return self.player_id
@@ -33,6 +34,9 @@ class PlayerScore:
     def get_misses(self) -> int:
         return self.misses
 
+    def get_mods(self) -> str:
+        return self.mods
+
     def set_score(self, score: int):
         self.score = score
 
@@ -44,6 +48,9 @@ class PlayerScore:
 
     def set_misses(self, misses: int):
         self.misses = misses
+
+    def set_mods (self, mods: str):
+        self.mods = mods
 
 
 class Team:
@@ -219,6 +226,19 @@ class ColdClearEyesIII(Amplifier):
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         [score.set_score(round(score.get_score() * 1.15)) for score in match.amplifier_users.get_player_scores()]
+        return match.team1.get_score(), match.team2.get_score()
+
+
+# Turn It Up
+class TurnItUp(Amplifier):
+    def __init__(self):
+        super().__init__(14, 1)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        [score.set_score(round(score.get_score() * 1.75)) for score in match.team1.get_player_scores() if
+         "EZ" in score.get_mods()]
+        [score.set_score(round(score.get_score() * 1.75)) for score in match.team2.get_player_scores() if
+         "EZ" in score.get_mods()]
         return match.team1.get_score(), match.team2.get_score()
 
 

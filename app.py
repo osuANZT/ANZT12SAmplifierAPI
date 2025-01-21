@@ -62,24 +62,28 @@ def score():
     player1_combo = request.args.get('player1_combo')
     player1_acc = request.args.get('player1_acc')
     player1_misses = request.args.get('player1_misses')
+    player1_mods = request.args.get('player1_mods')
 
     player2_id = request.args.get('player2_id')
     player2_score = request.args.get('player2_score')
     player2_combo = request.args.get('player2_combo')
     player2_acc = request.args.get('player2_acc')
     player2_misses = request.args.get('player2_misses')
+    player2_mods = request.args.get('player2_mods')
 
     player3_id = request.args.get('player3_id')
     player3_score = request.args.get('player3_score')
     player3_combo = request.args.get('player3_combo')
     player3_acc = request.args.get('player3_acc')
     player3_misses = request.args.get('player3_misses')
+    player3_mods = request.args.get('player3_mods')
 
     player4_id = request.args.get('player4_id')
     player4_score = request.args.get('player4_score')
     player4_combo = request.args.get('player4_combo')
     player4_acc = request.args.get('player4_acc')
     player4_misses = request.args.get('player4_misses')
+    player4_mods = request.args.get('player4_mods')
 
     # Convert params to right type
     player1_id, player2_id, player3_id, player4_id = int(player1_id), int(player2_id), int(player3_id), int(player4_id)
@@ -90,12 +94,12 @@ def score():
     amplifier_id = int(amplifier_id)
 
     # Data > objects (for sanity)
-    p1 = PlayerScore(player1_id, player1_score, player1_combo, player1_acc, player1_misses)
-    p2 = PlayerScore(player2_id, player2_score, player2_combo, player2_acc, player2_misses)
+    p1 = PlayerScore(player1_id, player1_score, player1_combo, player1_acc, player1_misses, player1_mods)
+    p2 = PlayerScore(player2_id, player2_score, player2_combo, player2_acc, player2_misses, player2_mods)
     team1 = Team([p1, p2])
 
-    p3 = PlayerScore(player3_id, player3_score, player3_combo, player3_acc, player3_misses)
-    p4 = PlayerScore(player4_id, player4_score, player4_combo, player4_acc, player4_misses)
+    p3 = PlayerScore(player3_id, player3_score, player3_combo, player3_acc, player3_misses, player3_mods)
+    p4 = PlayerScore(player4_id, player4_score, player4_combo, player4_acc, player4_misses, player4_mods)
     team2 = Team([p3, p4])
 
     # Determine which players belong to the given team
