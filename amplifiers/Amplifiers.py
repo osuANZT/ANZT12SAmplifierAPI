@@ -81,6 +81,38 @@ class Amplifier:
         return self.amplifier_uses
 
 
+def get_highest_score(match: MatchData, multiplier):
+    highest_score = max(score.get_score() for score in match.amplifier_users.get_player_scores())
+    for score in match.amplifier_users.get_player_scores():
+        if score.get_score() == highest_score:
+            score.set_score(round(score.get_score() * multiplier))
+
+class TheCarryI(Amplifier):
+    def __init__(self):
+        super().__init__(1, 1)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        get_highest_score(match, 1.2)
+        return match.team1.get_score(), match.team2.get_score()
+
+
+class TheCarryII(Amplifier):
+    def __init__(self):
+        super().__init__(2, 1)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        get_highest_score(match, 1.3)
+        return match.team1.get_score(), match.team2.get_score()
+
+
+class TheCarryIII(Amplifier):
+    def __init__(self):
+        super().__init__(3, 1)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        get_highest_score(match, 1.5)
+        return match.team1.get_score(), match.team2.get_score()
+
 class DudeThatFingerlock(Amplifier):
     def __init__(self):
         super().__init__(1, 2)
