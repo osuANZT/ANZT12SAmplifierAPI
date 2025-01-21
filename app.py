@@ -27,8 +27,6 @@ amplifiers = {
     13: ColdClearEyesIII(),
     14: TurnItUp(),
     15: Gambler(),
-    16: ChanceTime(),
-    17: EasyPeasy(),
     18: MakeItRock(),
     19: YinAndYangI(),
     20: YinAndYangII(),
