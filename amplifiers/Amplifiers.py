@@ -303,18 +303,10 @@ class YinAndYangIII(Amplifier):
         return team1_score, team2_score
 
 
-class ClassicFarmerI(Amplifier):
+# Classic Farmer
+class ClassicFarmer(Amplifier):
     def __init__(self):
-        super().__init__(25, 1)
-
-    def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round(score.get_score() * 1.05)) for score in match.amplifier_users.get_player_scores()]
-        return match.team1.get_score(), match.team2.get_score()
-
-
-class ClassicFarmerII(Amplifier):
-    def __init__(self):
-        super().__init__(26, 2)
+        super().__init__(23)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         [score.set_score(round(score.get_score() * 1.05)) for score in match.amplifier_users.get_player_scores()]
