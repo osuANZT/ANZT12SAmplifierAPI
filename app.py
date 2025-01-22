@@ -39,12 +39,9 @@ amplifiers = {
     28: LoadbearerI(),
     29: LoadbearerII(),
     30: LoadbearerIII(),
-    31: Lightbearer(),
-    32: CheatingDeath(),
     33: TheDragonConsumesI(),
     34: TheDragonConsumesII(),
     35: TheDragonConsumesIII(),
-    36: TheMissingPiece(),
     37: JTBFREAKS(),
     38: DesperationI(),
     39: DesperationII()

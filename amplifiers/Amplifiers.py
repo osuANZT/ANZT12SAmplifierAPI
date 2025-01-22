@@ -312,10 +312,10 @@ class ClassicFarmer(Amplifier):
         [score.set_score(round(score.get_score() * 1.05)) for score in match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
-
-class Snail(Amplifier):
+# AccDance
+class AccDance(Amplifier):
     def __init__(self):
-        super().__init__(27, 1)
+        super().__init__(24)
 
     def get_modified_score(self, match: MatchData) -> (float, float):
         team1_score = round((match.team1.get_player_scores()[0].get_acc() + match.team1.get_player_scores()[1].get_acc()) / 2, 2)
@@ -323,19 +323,10 @@ class Snail(Amplifier):
         return team1_score, team2_score
 
 
-class SnailSect(Amplifier):
-    def __init__(self):
-        super().__init__(8, 6)
-
-    def get_modified_score(self, match: MatchData) -> (float, float):
-        team1_score = round((match.team1.get_player_scores()[0].get_acc() + match.team1.get_player_scores()[1].get_acc()) / 2, 2)
-        team2_score = round((match.team2.get_player_scores()[0].get_acc() + match.team2.get_player_scores()[1].get_acc()) / 2, 2)
-        return team1_score, team2_score
-
-
+# Synchronised I
 class SynchronisedI(Amplifier):
     def __init__(self):
-        super().__init__(28, 1)
+        super().__init__(25)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         base_multiplier = 1.1
@@ -344,15 +335,16 @@ class SynchronisedI(Amplifier):
         if acc_difference >= 2:
             base_multiplier = 1.0
         else:
-            base_multiplier -= 0.05 * acc_difference
+            base_multiplier -= 0.0025 * acc_difference
         [score.set_score(round(score.get_score() * base_multiplier)) for score in
          match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
 
+# Synchronised II
 class SynchronisedII(Amplifier):
     def __init__(self):
-        super().__init__(29, 1)
+        super().__init__(26)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         base_multiplier = 1.2
@@ -361,29 +353,31 @@ class SynchronisedII(Amplifier):
         if acc_difference >= 4:
             base_multiplier = 1.0
         else:
-            base_multiplier -= 0.05 * acc_difference
+            base_multiplier -= 0.0025 * acc_difference
         [score.set_score(round(score.get_score() * base_multiplier)) for score in
          match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
 
+# Go With The Flow
 class GoWithTheFlow(Amplifier):
     def __init__(self):
-        super().__init__(30, 1)
+        super().__init__(27)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         [score.set_score(round(score.get_score() * 1.15)) for score in match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
 
+# Loadbearer I
 class LoadbearerI(Amplifier):
     def __init__(self):
-        super().__init__(31, 1)
+        super().__init__(31)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = score_difference * 0.25
+        score_added = max(score_difference * 0.25, 150000)
 
         if match.amplifier_users == match.team1:
             return round(match.team1.get_score() + score_added), match.team2.get_score()
@@ -391,14 +385,15 @@ class LoadbearerI(Amplifier):
             return match.team1.get_score(), round(match.team2.get_score() + score_added)
 
 
+# Loadbearer II
 class LoadbearerII(Amplifier):
     def __init__(self):
-        super().__init__(32, 1)
+        super().__init__(32)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = score_difference * 0.5
+        score_added = max(score_difference * 0.5, 300000)
 
         if match.amplifier_users == match.team1:
             return round(match.team1.get_score() + score_added), match.team2.get_score()
@@ -406,14 +401,15 @@ class LoadbearerII(Amplifier):
             return match.team1.get_score(), round(match.team2.get_score() + score_added)
 
 
+# Loadbearer III
 class LoadbearerIII(Amplifier):
     def __init__(self):
-        super().__init__(33, 2)
+        super().__init__(33)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = score_difference * 0.5
+        score_added = max(score_difference * 0.75, 400000)
 
         if match.amplifier_users == match.team1:
             return round(match.team1.get_score() + score_added), match.team2.get_score()
@@ -421,40 +417,62 @@ class LoadbearerIII(Amplifier):
             return match.team1.get_score(), round(match.team2.get_score() + score_added)
 
 
-class TrueHero(Amplifier):
-    def __init__(self):
-        super().__init__(36, 3)
-
-    def get_modified_score(self, match: MatchData) -> (int, int):
-        highest_score_player = max(match.amplifier_users.get_player_scores(),
-                                   key=lambda player_score: player_score.get_score())
-
-        highest_score_player.set_score(highest_score_player.get_score() * 1.3)
-        return round(match.team1.get_score()), round(match.team2.get_score())
-
-
+# The Dragon Consumes I
 class TheDragonConsumesI(Amplifier):
     def __init__(self):
-        super().__init__(37, 1)
+        super().__init__(33)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         [score.set_score(round(score.get_score() * 1.1)) for score in match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
 
+# The Dragon Consumes II
 class TheDragonConsumesII(Amplifier):
     def __init__(self):
-        super().__init__(38, 1)
+        super().__init__(34)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         [score.set_score(round(score.get_score() * 1.2)) for score in match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
 
 
+# The Dragon Consumes III
 class TheDragonConsumesIII(Amplifier):
     def __init__(self):
-        super().__init__(39, 2)
+        super().__init__(35)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round(score.get_score() * 1.2)) for score in match.amplifier_users.get_player_scores()]
+        [score.set_score(round(score.get_score() * 1.3)) for score in match.amplifier_users.get_player_scores()]
+        return match.team1.get_score(), match.team2.get_score()
+
+
+# JTBFREAKS
+class JTBFREAKS(Amplifier):
+    def __init__(self):
+        super().__init__(37)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        team1_score = match.team1.get_player_scores()[0].get_combo() + match.team1.get_player_scores()[1].get_combo()
+        team2_score = match.team2.get_player_scores()[0].get_combo() + match.team2.get_player_scores()[1].get_combo()
+        return team1_score + team2_score
+
+
+# Desperation I
+class DesperationI(Amplifier):
+    def __init__(self):
+        super().__init__(38)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        [score.set_score(round(score.get_score() * 0.7)) for score in match.amplifier_users.get_player_scores()]
+        return match.team1.get_score(), match.team2.get_score()
+
+
+# Desperation II
+class DesperationII(Amplifier):
+    def __init__(self):
+        super().__init__(38)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        [score.set_score(round(score.get_score() * 0.85)) for score in match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
