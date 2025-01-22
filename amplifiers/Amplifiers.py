@@ -331,8 +331,8 @@ class AccDance(Amplifier):
         super().__init__(24)
 
     def get_modified_score(self, match: MatchData) -> (float, float):
-        team1_score = round_up_on_half((match.team1.get_player_scores()[0].get_acc() + match.team1.get_player_scores()[1].get_acc()) / 2, 2)
-        team2_score = round_up_on_half((match.team2.get_player_scores()[0].get_acc() + match.team2.get_player_scores()[1].get_acc()) / 2, 2)
+        team1_score = round((match.team1.get_player_scores()[0].get_acc() + match.team1.get_player_scores()[1].get_acc()) / 2, 2)
+        team2_score = round((match.team2.get_player_scores()[0].get_acc() + match.team2.get_player_scores()[1].get_acc()) / 2, 2)
         return team1_score, team2_score
 
 
@@ -378,8 +378,10 @@ class GoWithTheFlow(Amplifier):
         super().__init__(27)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round_up_on_half(score.get_score() * 1.15)) for score in match.amplifier_users.get_player_scores()]
-        return match.team1.get_score(), match.team2.get_score()
+        if match.amplifier_users == match.team1:
+            return round_up_on_half(match.team1.get_score() * 1.15), match.team2.get_score()
+        else:
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 1.15)
 
 
 # Loadbearer I
