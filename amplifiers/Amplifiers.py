@@ -345,7 +345,7 @@ class SynchronisedI(Amplifier):
         base_multiplier = 1.1
         acc_difference = abs(match.amplifier_users.get_player_scores()[0].get_acc() -
                              match.amplifier_users.get_player_scores()[1].get_acc())
-        if acc_difference >= 2:
+        if acc_difference >= 4:
             base_multiplier = 1.0
         else:
             base_multiplier -= 0.0025 * acc_difference
@@ -363,7 +363,7 @@ class SynchronisedII(Amplifier):
         base_multiplier = 1.2
         acc_difference = abs(match.amplifier_users.get_player_scores()[0].get_acc() -
                              match.amplifier_users.get_player_scores()[1].get_acc())
-        if acc_difference >= 4:
+        if acc_difference >= 8:
             base_multiplier = 1.0
         else:
             base_multiplier -= 0.0025 * acc_difference
@@ -387,12 +387,12 @@ class GoWithTheFlow(Amplifier):
 # Loadbearer I
 class LoadbearerI(Amplifier):
     def __init__(self):
-        super().__init__(31)
+        super().__init__(28)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = max(score_difference * 0.25, 150000)
+        score_added = min(score_difference * 0.25, 150000)
 
         if match.amplifier_users == match.team1:
             return round_up_on_half(match.team1.get_score() + score_added), match.team2.get_score()
@@ -403,12 +403,12 @@ class LoadbearerI(Amplifier):
 # Loadbearer II
 class LoadbearerII(Amplifier):
     def __init__(self):
-        super().__init__(32)
+        super().__init__(29)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = max(score_difference * 0.5, 300000)
+        score_added = min(score_difference * 0.5, 300000)
 
         if match.amplifier_users == match.team1:
             return round_up_on_half(match.team1.get_score() + score_added), match.team2.get_score()
@@ -419,12 +419,12 @@ class LoadbearerII(Amplifier):
 # Loadbearer III
 class LoadbearerIII(Amplifier):
     def __init__(self):
-        super().__init__(33)
+        super().__init__(30)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = max(score_difference * 0.75, 400000)
+        score_added = min(score_difference * 0.75, 400000)
 
         if match.amplifier_users == match.team1:
             return round_up_on_half(match.team1.get_score() + score_added), match.team2.get_score()
@@ -470,7 +470,7 @@ class JTBFREAKS(Amplifier):
     def get_modified_score(self, match: MatchData) -> (int, int):
         team1_score = match.team1.get_player_scores()[0].get_combo() + match.team1.get_player_scores()[1].get_combo()
         team2_score = match.team2.get_player_scores()[0].get_combo() + match.team2.get_player_scores()[1].get_combo()
-        return team1_score + team2_score
+        return team1_score, team2_score
 
 
 # Desperation I
@@ -479,9 +479,10 @@ class DesperationI(Amplifier):
         super().__init__(38)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round_up_on_half(score.get_score() * 0.7)) for score in match.amplifier_users.get_player_scores()]
-        return match.team1.get_score(), match.team2.get_score()
-
+        if match.amplifier_users == match.team1:
+            return round_up_on_half(match.team1.get_score() * 0.7), match.team2.get_score()
+        else:
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 0.7)
 
 # Desperation II
 class DesperationII(Amplifier):
@@ -489,5 +490,7 @@ class DesperationII(Amplifier):
         super().__init__(38)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round_up_on_half(score.get_score() * 0.85)) for score in match.amplifier_users.get_player_scores()]
-        return match.team1.get_score(), match.team2.get_score()
+        if match.amplifier_users == match.team1:
+            return round_up_on_half(match.team1.get_score() * 0.85), match.team2.get_score()
+        else:
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 0.85)
