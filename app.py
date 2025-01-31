@@ -31,7 +31,6 @@ amplifiers = {
     19: YinAndYangI(),
     20: YinAndYangII(),
     21: YinAndYangIII(),
-    23: ClassicFarmer(),
     24: AccDance(),
     25: SynchronisedI(),
     26: SynchronisedII(),
@@ -44,7 +43,8 @@ amplifiers = {
     35: TheDragonConsumesIII(),
     37: JTBFREAKS(),
     38: DesperationI(),
-    39: DesperationII()
+    39: DesperationII(),
+    41: Roulette()
 }
 
 
