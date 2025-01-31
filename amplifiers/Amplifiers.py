@@ -316,6 +316,18 @@ class YinAndYangIII(Amplifier):
         return team1_score, team2_score
 
 
+# Trickster II
+class TricksterII(Amplifier):
+    def __init__(self):
+        super().__init__(23)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        if match.amplifier_users == match.team1:
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 50 / 53)
+        else:
+            return round_up_on_half(match.team1.get_score() * 50 / 53), match.team2.get_score()
+
+
 # AccDance
 class AccDance(Amplifier):
     def __init__(self):

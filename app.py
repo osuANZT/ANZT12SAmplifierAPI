@@ -31,6 +31,7 @@ amplifiers = {
     19: YinAndYangI(),
     20: YinAndYangII(),
     21: YinAndYangIII(),
+    23: TricksterII(),
     24: AccDance(),
     25: SynchronisedI(),
     26: SynchronisedII(),
