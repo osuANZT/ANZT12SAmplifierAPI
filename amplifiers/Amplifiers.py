@@ -383,7 +383,7 @@ class LoadbearerI(Amplifier):
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = min(score_difference * 0.25, 150000)
+        score_added = min(score_difference * 0.2, 150000)
 
         if match.amplifier_users == match.team1:
             return round_up_on_half(match.team1.get_score() + score_added), match.team2.get_score()
@@ -399,7 +399,7 @@ class LoadbearerII(Amplifier):
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = min(score_difference * 0.5, 250000)
+        score_added = min(score_difference * 0.4, 250000)
 
         if match.amplifier_users == match.team1:
             return round_up_on_half(match.team1.get_score() + score_added), match.team2.get_score()
@@ -415,7 +415,7 @@ class LoadbearerIII(Amplifier):
     def get_modified_score(self, match: MatchData) -> (int, int):
         score_difference = abs(match.amplifier_users.get_player_scores()[0].get_score() -
                                match.amplifier_users.get_player_scores()[1].get_score())
-        score_added = min(score_difference * 0.75, 350000)
+        score_added = min(score_difference * 0.6, 350000)
 
         if match.amplifier_users == match.team1:
             return round_up_on_half(match.team1.get_score() + score_added), match.team2.get_score()
