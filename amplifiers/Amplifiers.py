@@ -88,11 +88,33 @@ def round_up_on_half(value):
     return int(value + 0.5)
 
 # Get the highest score for all amplifier teams, and multiply that score with the multiplier.
-def get_highest_score(match: MatchData, multiplier):
-    highest_score = max(score.get_score() for score in match.amplifier_users.get_player_scores())
-    for score in match.amplifier_users.get_player_scores():
+def get_highest_score(match: MatchData, multiplier, lowMultiplier):
+    scores = match.amplifier_users.get_player_scores()
+
+    if not scores:
+        return
+
+    # Get the highest and lowest scores
+    highest_score = max(score.get_score() for score in scores)
+    lowest_score = min(score.get_score() for score in scores)
+
+    # If all scores are the same, apply multipliers to the first and last players
+    if highest_score == lowest_score:
+        scores[0].set_score(round_up_on_half(scores[0].get_score() * multiplier))
+        if len(scores) > 1:
+            scores[-1].set_score(round_up_on_half(scores[-1].get_score() * lowMultiplier))
+        return
+
+    # Apply the high multiplier to the highest score
+    for score in scores:
         if score.get_score() == highest_score:
             score.set_score(round_up_on_half(score.get_score() * multiplier))
+            break
+
+    # Apply the low multiplier to the lowest score
+    for score in scores:
+        if score.get_score() == lowest_score:
+            score.set_score(round_up_on_half(score.get_score() * lowMultiplier))
 
 # The Carry I
 class TheCarryI(Amplifier):
@@ -100,7 +122,7 @@ class TheCarryI(Amplifier):
         super().__init__(1)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        get_highest_score(match, 1.2)
+        get_highest_score(match, 1.2, 0.95)
         return match.team1.get_score(), match.team2.get_score()
 
 
@@ -110,7 +132,7 @@ class TheCarryII(Amplifier):
         super().__init__(2)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        get_highest_score(match, 1.3)
+        get_highest_score(match, 1.25, 0.95)
         return match.team1.get_score(), match.team2.get_score()
 
 
@@ -120,7 +142,7 @@ class TheCarryIII(Amplifier):
         super().__init__(3)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        get_highest_score(match, 1.5)
+        get_highest_score(match, 1.4, 0.9)
         return match.team1.get_score(), match.team2.get_score()
 
 # Poison I
@@ -168,20 +190,7 @@ class LimitBreak(Amplifier):
         return match.team1.get_score(), match.team2.get_score()
 
 
-# The King I
-class TheKingI(Amplifier):
-    def __init__(self):
-        super().__init__(8)
-
-    def get_modified_score(self, match: MatchData) -> (int, int):
-        if match.amplifier_users == match.team1:
-            return round_up_on_half(match.team1.get_score() * 1.75), match.team2.get_score()
-        else:
-            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 1.75)
-
-
-# The King II
-class TheKingII(Amplifier):
+class TheKing(Amplifier):
     def __init__(self):
         super().__init__(9)
 
@@ -267,9 +276,11 @@ class MakeItRock(Amplifier):
         super().__init__(18)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        set_team = match.team2 if match.amplifier_users == match.team1 else match.team1
-        [score.set_score(round_up_on_half(score.get_score() * 1.25)) for score in set_team.get_player_scores()]
-        return match.team1.get_score(), match.team2.get_score()
+        if match.amplifier_users == match.team1:
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 1.25)
+        else:
+            return round_up_on_half(match.team1.get_score() * 1.25), match.team2.get_score()
+
 
 # Yin and Yang Get Scores
 def yin_and_yang_get_team_info(match: MatchData, team, multiplier):
@@ -348,10 +359,11 @@ class SynchronisedI(Amplifier):
         base_multiplier = 1.1
         acc_difference = abs(match.amplifier_users.get_player_scores()[0].get_acc() -
                              match.amplifier_users.get_player_scores()[1].get_acc())
-        if acc_difference >= 4:
-            base_multiplier = 1.0
-        else:
-            base_multiplier -= 0.0025 * acc_difference
+        base_multiplier -= 0.025 * acc_difference
+
+        if base_multiplier < 1:
+            base_multiplier = 1
+
         [score.set_score(round_up_on_half(score.get_score() * base_multiplier)) for score in
          match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
@@ -366,10 +378,27 @@ class SynchronisedII(Amplifier):
         base_multiplier = 1.2
         acc_difference = abs(match.amplifier_users.get_player_scores()[0].get_acc() -
                              match.amplifier_users.get_player_scores()[1].get_acc())
-        if acc_difference >= 8:
-            base_multiplier = 1.0
-        else:
-            base_multiplier -= 0.0025 * acc_difference
+        base_multiplier -= 0.025 * acc_difference
+
+        if base_multiplier < 1:
+            base_multiplier = 1
+        [score.set_score(round_up_on_half(score.get_score() * base_multiplier)) for score in
+         match.amplifier_users.get_player_scores()]
+        return match.team1.get_score(), match.team2.get_score()
+
+# Synchronised III
+class SynchronisedIII(Amplifier):
+    def __init__(self):
+        super().__init__(42)
+
+    def get_modified_score(self, match: MatchData) -> (int, int):
+        base_multiplier = 1.35
+        acc_difference = abs(match.amplifier_users.get_player_scores()[0].get_acc() -
+                             match.amplifier_users.get_player_scores()[1].get_acc())
+        base_multiplier -= 0.05 * acc_difference
+
+        if base_multiplier < 1:
+            base_multiplier = 1
         [score.set_score(round_up_on_half(score.get_score() * base_multiplier)) for score in
          match.amplifier_users.get_player_scores()]
         return match.team1.get_score(), match.team2.get_score()
@@ -382,9 +411,9 @@ class GoWithTheFlow(Amplifier):
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         if match.amplifier_users == match.team1:
-            return round_up_on_half(match.team1.get_score() * 1.15), match.team2.get_score()
+            return round_up_on_half(match.team1.get_score() * 1.3), match.team2.get_score()
         else:
-            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 1.15)
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 1.3)
 
 
 # Loadbearer I

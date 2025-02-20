@@ -19,8 +19,7 @@ amplifiers = {
     5: PoisonII(),
     6: PoisonIII(),
     7: LimitBreak(),
-    8: TheKingI(),
-    9: TheKingII(),
+    9: TheKing(),
     10: DudeThatFingerlock(),
     11: ColdClearEyesI(),
     12: ColdClearEyesII(),
@@ -33,7 +32,7 @@ amplifiers = {
     21: YinAndYangIII(),
     23: TricksterII(),
     24: AccDance(),
-    25: SynchronisedI(),
+        25: SynchronisedI(),
     26: SynchronisedII(),
     27: GoWithTheFlow(),
     28: LoadbearerI(),
@@ -45,7 +44,8 @@ amplifiers = {
     37: JTBFREAKS(),
     38: DesperationI(),
     39: DesperationII(),
-    41: Roulette()
+    41: Roulette(),
+    42: SynchronisedIII()
 }
 
 
