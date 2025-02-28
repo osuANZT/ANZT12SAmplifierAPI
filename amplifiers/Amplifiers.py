@@ -98,7 +98,7 @@ def get_highest_score(match: MatchData, multiplier):
     highest_score = max(score.get_score() for score in scores)
     lowest_score = min(score.get_score() for score in scores)
 
-    # If all scores are the same, apply multipliers to the first and last players
+    # If all scores are the same, apply multipliers to the first player
     if highest_score == lowest_score:
         scores[0].set_score(round_up_on_half(scores[0].get_score() * multiplier))
         return
@@ -507,9 +507,9 @@ class Desperation(Amplifier):
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         if match.amplifier_users == match.team1:
-            return round_up_on_half(match.team1.get_score() * 0.85), match.team2.get_score()
+            return round_up_on_half(match.team1.get_score() * 0.7), match.team2.get_score()
         else:
-            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 0.85)
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 0.7)
 
 
 # Soft Rock
