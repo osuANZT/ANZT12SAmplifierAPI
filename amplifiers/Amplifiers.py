@@ -507,9 +507,9 @@ class Desperation(Amplifier):
 
     def get_modified_score(self, match: MatchData) -> (int, int):
         if match.amplifier_users == match.team1:
-            return round_up_on_half(match.team1.get_score() * 0.7), match.team2.get_score()
+            return round_up_on_half(match.team1.get_score() * 0.8), match.team2.get_score()
         else:
-            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 0.7)
+            return match.team1.get_score(), round_up_on_half(match.team2.get_score() * 0.8)
 
 
 # Soft Rock
@@ -518,8 +518,6 @@ class SoftRock(Amplifier):
         super().__init__(40)
 
     def get_modified_score(self, match: MatchData) -> (int, int):
-        [score.set_score(round_up_on_half(score.get_score() * 1.1)) for score in match.amplifier_users.get_player_scores() if
-         "HR" not in score.get_mods()]
         return match.team1.get_score(), match.team2.get_score()
 
 
